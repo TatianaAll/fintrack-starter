@@ -9,8 +9,8 @@
 /**
  * Additionne deux nombres.
  */
-export function add(a, b) {
-  return a + b;
+export function add(number1, number2) {
+  return number1 + number2;
 }
 
 /**
@@ -87,7 +87,7 @@ export function computeBalance(transactions) {
   let balance = 0;
   for (let i = 0; i < transactions.length; i++) {
     const tx = transactions[i];
-    if (tx.type === 'credit') {
+    if (tx.type === "credit") {
       balance += tx.amount;
     } else {
       balance -= tx.amount;
@@ -99,8 +99,8 @@ export function computeBalance(transactions) {
 /**
  * Formate un montant en chaîne avec deux décimales et le symbole de la devise.
  */
-export function formatAmount(amount, currency = 'EUR') {
-  const symbols = { EUR: '€', USD: '$', GBP: '£' };
+export function formatAmount(amount, currency = "EUR") {
+  const symbols = { EUR: "€", USD: "$", GBP: "£" };
   const symbol = symbols[currency] || currency;
-  return amount.toFixed(2) + ' ' + symbol;
+  return amount.toFixed(2) + " " + symbol;
 }
