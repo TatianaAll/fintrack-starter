@@ -28,10 +28,12 @@ export function multiply(a, b) {
 }
 
 /**
- * Divise a par b.
- * BUG LATENT : ne gère pas la division par zéro (retourne Infinity ou NaN).
+ * Divise a par b. Prise en compte de la division par 0
  */
 export function divide(a, b) {
+  if (b === 0) {
+    throw new Error("Division par zéro impossible");
+  }
   return a / b;
 }
 
@@ -49,12 +51,9 @@ export function modulo(a, b) {
  *   years     : durée en années
  *
  * Formule attendue : principal * (rate / 100) * years
- *
- * BUG LATENT : la division par 100 est manquante, le taux est traité
- *              comme un coefficient décimal au lieu d'un pourcentage.
  */
 export function simpleInterest(principal, rate, years) {
-  return principal * rate * years;
+  return principal * (rate / 100) * years;
 }
 
 /**
