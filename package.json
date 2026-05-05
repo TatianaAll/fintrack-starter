@@ -27,11 +27,13 @@
     "prettier": "^3.8.3",
     "vite": "^5.4.0"
   },
-    "lint-staged": {
-      "*.{js,jsx}": [
-        "eslint --fix",
-        "prettier --write"
-      ]
-    }
-  
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,json}": [
+      "prettier --write"
+    ]
+  }
 }
