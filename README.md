@@ -26,8 +26,8 @@ L'appli est dispo sur http://localhost:5173.
 ## TODO
 
 - [ ] Ajouter des tests
-- [ ] Mettre en place un linter
-- [ ] CI
+- [X] Mettre en place un linter
+- [X] CI
 - [ ] Export CSV
 - [ ] Refacto du module legacy
 
@@ -46,5 +46,20 @@ L'appli est dispo sur http://localhost:5173.
 ESLint et Prettier pour Linter et formater le projet durant la CI-CD `npm install --save-dev eslint prettier eslint-config-prettier`
 Installation avec `npx eslint --init` pour du JS, linter + formattage (donc avec vérification du code), sur un code REACT, utilisation de npm
 
-Installation de Husky pour faire tourner ESLint et Prettier durant la CI-CD `npm install --save-dev husky lint-staged && npx husky init `
+Installation de Husky pour faire tourner ESLint et Prettier durant la CI-CD `npm install --save-dev husky lint-staged && npx husky init`
+
+Modification du package.json pour ajouter le linter avec 
+```json 
+"lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,json}": [
+      "prettier --write"
+    ]
+  }
+  ```
+
+Création d'un dossier .github avec un dossier workflows et création du workflow à exécuter au push dans gitHub grace à github Action
 *Projet fil rouge B3 Dev — My Digital School Bordeaux*
