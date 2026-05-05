@@ -10,6 +10,9 @@
  * Additionne deux nombres.
  */
 export function add(number1, number2) {
+  if (typeof number1 !== "number" || typeof number2 !== "number") {
+    throw new Error("Merci de ne mettre que des nombres, pas de string");
+  }
   return number1 + number2;
 }
 
@@ -17,6 +20,9 @@ export function add(number1, number2) {
  * Soustrait b de a.
  */
 export function subtract(a, b) {
+  if (typeof a !== "number" || typeof b !== "number") {
+    throw new Error("Merci de ne mettre que des nombre, pas de string");
+  }
   return a - b;
 }
 
@@ -24,6 +30,9 @@ export function subtract(a, b) {
  * Multiplie deux nombres.
  */
 export function multiply(a, b) {
+  if (typeof a !== "number" || typeof b !== "number") {
+    throw new Error("Merci de ne mettre que des nombre, pas de string");
+  }
   return a * b;
 }
 
@@ -31,6 +40,9 @@ export function multiply(a, b) {
  * Divise a par b. Prise en compte de la division par 0
  */
 export function divide(a, b) {
+  if (typeof a !== "number" || typeof b !== "number") {
+    throw new Error("Merci de ne mettre que des nombre, pas de string");
+  }
   if (b === 0) {
     throw new Error("Division par zéro impossible");
   }
@@ -41,6 +53,9 @@ export function divide(a, b) {
  * Modulo de a par b.
  */
 export function modulo(a, b) {
+  if (typeof a !== "number" || typeof b !== "number") {
+    throw new Error("Merci de ne mettre que des nombre, pas de string");
+  }
   return a % b;
 }
 
@@ -102,4 +117,12 @@ export function formatAmount(amount, currency = "EUR") {
   const symbols = { EUR: "€", USD: "$", GBP: "£" };
   const symbol = symbols[currency] || currency;
   return amount.toFixed(2) + " " + symbol;
+}
+
+/**
+ * Génère un timestamp financier (dépend de Date.now).
+ * Sert à démontrer le mock d'une dépendance externe.
+ */
+export function generateTimestamp() {
+  return Date.now();
 }
