@@ -40,5 +40,6 @@ L'appli est dispo sur http://localhost:5173.
 3 - Vérifier que la version de node est la bonne enregistré dans le .nvmrc avec `node –version`, et la modifier avec la bonne version 
 4 - Lancer `npm ci` pour installer les dépendances écrites dans le package-lock.json 
 5 - Copier le .env.example pour créer le .env du projet 
+6 - Avant de push vérifier que vous êtes bien sur votre repo avec `git remote -v`
 
 *Projet fil rouge B3 Dev — My Digital School Bordeaux*
