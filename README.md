@@ -67,5 +67,6 @@ Création d'un dossier .github avec un dossier workflows et création du workflo
 Première étape installer Jest `npm install --save-dev jest`, et ajouter le script "test" dans le package.json 
 Vu que le projet est en ESM et que Jest est configuré de base pour du Common JS j'ai dû faire quelques modifications (sources : https://github.com/jestjs/jest/blob/main/docs/ECMAScriptModules.md).
 
+Pour le test de coverage il faut lancer `npm test -- --coverage` vu qu'on est avec l'écriture ESM
 
 *Projet fil rouge B3 Dev — My Digital School Bordeaux*
