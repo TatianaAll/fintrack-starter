@@ -21,7 +21,7 @@ export function add(number1, number2) {
  */
 export function subtract(a, b) {
   if (typeof a !== "number" || typeof b !== "number") {
-    throw new Error("Merci de ne mettre que des nombre, pas de string");
+    throw new Error("Merci de ne mettre que des nombres, pas de string");
   }
   return a - b;
 }
@@ -31,7 +31,7 @@ export function subtract(a, b) {
  */
 export function multiply(a, b) {
   if (typeof a !== "number" || typeof b !== "number") {
-    throw new Error("Merci de ne mettre que des nombre, pas de string");
+    throw new Error("Merci de ne mettre que des nombres, pas de string");
   }
   return a * b;
 }
@@ -41,7 +41,7 @@ export function multiply(a, b) {
  */
 export function divide(a, b) {
   if (typeof a !== "number" || typeof b !== "number") {
-    throw new Error("Merci de ne mettre que des nombre, pas de string");
+    throw new Error("Merci de ne mettre que des nombres, pas de string");
   }
   if (b === 0) {
     throw new Error("Division par zéro impossible");
@@ -54,7 +54,7 @@ export function divide(a, b) {
  */
 export function modulo(a, b) {
   if (typeof a !== "number" || typeof b !== "number") {
-    throw new Error("Merci de ne mettre que des nombre, pas de string");
+    throw new Error("Merci de ne mettre que des nombres, pas de string");
   }
   return a % b;
 }

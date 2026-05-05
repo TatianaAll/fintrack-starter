@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import {
   add,
   subtract,
@@ -7,8 +8,10 @@ import {
   formatAmount,
   simpleInterest,
   generateTimestamp,
+  compoundInterest,
+  convertCurrency,
+  computeBalance,
 } from "./calculator.js";
-import { jest } from "@jest/globals";
 
 // -------- TESTE DES FONCTIONS DE CALCUL SIMPLE ----------
 describe("add", () => {
@@ -57,6 +60,11 @@ describe("subtract", () => {
   it("retourne NaN avec NaN", () => {
     expect(subtract(NaN, 5)).toBeNaN();
   });
+  it("Erreur si calcul avec une chaîne de caractère", () => {
+    expect(() => subtract(5, "amandine")).toThrow(
+      "Merci de ne mettre que des nombres, pas de string",
+    );
+  });
 });
 
 describe("multiply", () => {
@@ -74,6 +82,11 @@ describe("multiply", () => {
   });
   it("retourne NaN avec NaN", () => {
     expect(multiply(NaN, 5)).toBeNaN();
+  });
+  it("Erreur si calcul avec une chaîne de caractère", () => {
+    expect(() => multiply(5, "amandine")).toThrow(
+      "Merci de ne mettre que des nombres, pas de string",
+    );
   });
 });
 
@@ -93,6 +106,11 @@ describe("divide", () => {
   it("retourne NaN avec NaN", () => {
     expect(divide(NaN, 5)).toBeNaN();
   });
+  it("Erreur si calcul avec une chaîne de caractère", () => {
+    expect(() => divide(5, "amandine")).toThrow(
+      "Merci de ne mettre que des nombres, pas de string",
+    );
+  });
 });
 
 describe("modulo", () => {
@@ -107,6 +125,11 @@ describe("modulo", () => {
   });
   it("retourne zéro pour modulo exact", () => {
     expect(modulo(10, 5)).toBe(0);
+  });
+  it("Erreur si calcul avec une chaîne de caractère", () => {
+    expect(() => modulo(5, "amandine")).toThrow(
+      "Merci de ne mettre que des nombres, pas de string",
+    );
   });
 });
 
@@ -170,5 +193,55 @@ describe("generateTimestamp", () => {
     const result = generateTimestamp();
     expect(Date.now).toHaveBeenCalled();
     expect(result).toBe(1700000000000);
+  });
+});
+
+// ---------- AJOUT VIA IA -----------
+describe("compoundInterest", () => {
+  it("calcul les intérets pour des valeurs positives", () => {
+    expect(compoundInterest(1000, 5, 2)).toBeCloseTo(102.5, 5);
+  });
+  it("retourne 0 quand l'année est à 0", () => {
+    expect(compoundInterest(1000, 5, 0)).toBe(0);
+  });
+  it("retourne 0 si la rate est à 0", () => {
+    expect(compoundInterest(1000, 0, 5)).toBe(0);
+  });
+  it("gère les rate négatives", () => {
+    const result = compoundInterest(1000, -10, 1);
+    expect(result).toBeCloseTo(-100, 5);
+  });
+});
+
+describe("convertCurrency", () => {
+  it("convertis un amount avec une rate positive", () => {
+    expect(convertCurrency(100, 1.2)).toBe(120);
+  });
+  it("revois 0 quand amount = 0", () => {
+    expect(convertCurrency(0, 1.5)).toBe(0);
+  });
+  it("Autorise les rate négative (latent bug)", () => {
+    expect(convertCurrency(100, -1.2)).toBe(-120);
+  });
+});
+
+describe("computeBalance", () => {
+  it("computes balance with credits and debits", () => {
+    const txs = [
+      { amount: 100, type: "credit" },
+      { amount: 40, type: "debit" },
+      { amount: 10, type: "credit" },
+    ];
+    expect(computeBalance(txs)).toBe(70);
+  });
+  it("returns 0 for an empty transactions array", () => {
+    expect(computeBalance([])).toBe(0);
+  });
+  it("treats any non-credit type as debit", () => {
+    const txs = [{ amount: 50, type: "debit" }];
+    expect(computeBalance(txs)).toBe(-50);
+  });
+  it("throws when transactions is null (latent bug)", () => {
+    expect(() => computeBalance(null)).toThrow();
   });
 });
