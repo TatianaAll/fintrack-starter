@@ -1,4 +1,4 @@
-import { reverse } from "./string-utils.js";
+import { reverse } from "../string-utils.js";
 
 test('reverse "abc" returns "cba"', () => {
   expect(reverse("abc")).toBe("cba");

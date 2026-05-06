@@ -4,7 +4,7 @@ import {
   filterTransactionsCurrentMonth,
   escapeCsvValue,
   buildCsvContent,
-} from "./export-csv.js";
+} from "../export-csv.js";
 
 test("Je donne un tableau de transaction, quand je récupère les en-têtes CSV, alors je dois obtenir les noms de colonnes corrects", () => {
   const arrayTransaction = {

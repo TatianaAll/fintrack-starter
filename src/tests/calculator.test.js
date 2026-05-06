@@ -11,7 +11,7 @@ import {
   compoundInterest,
   convertCurrency,
   computeBalance,
-} from "./calculator.js";
+} from "../calculator.js";
 
 // -------- TESTE DES FONCTIONS DE CALCUL SIMPLE ----------
 describe("add", () => {
