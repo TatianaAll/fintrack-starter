@@ -79,6 +79,8 @@ La communication est ainsi facilitée entre les équipes et évite des incompré
 
 L’accent est mis sur les processus métiers auxquels le logiciel devra apporter des solutions.
 
+## E2E - installation de Playwright
+`npm init playwright@latest`
 ### Ecriture des tests
 ❌ toBe → comparaison par référence
 ✅ toEqual / toStrictEqual → comparaison par valeur
