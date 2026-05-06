@@ -1,9 +1,9 @@
 import {
-  getHeaderCsv,
-  transformTransactionInCsv,
-  transactionOnlyInCurrentMonth,
-  encapsulateSpecialChars,
-  emptyArray,
+  getCsvHeaders,
+  transactionsToCsvRows,
+  filterTransactionsCurrentMonth,
+  escapeCsvValue,
+  buildCsvContent,
 } from "./export-csv.js";
 
 test("Retourner les bons nom de colonnes", () => {
@@ -16,7 +16,7 @@ test("Retourner les bons nom de colonnes", () => {
     currency: "EUR",
     category: "revenu",
   };
-  expect(getHeaderCsv(arrayTransaction)).toEqual([
+  expect(getCsvHeaders(arrayTransaction)).toEqual([
     "id",
     "date",
     "label",
@@ -39,7 +39,7 @@ test("Retourner les bonnes informations de la ligne", () => {
       category: "revenu",
     },
   ];
-  expect(transformTransactionInCsv(arrayTransaction)).toEqual([
+  expect(transactionsToCsvRows(arrayTransaction)).toEqual([
     `"xx/xx/xx","Salaire","2400","revenu"`,
   ]);
 });
@@ -84,7 +84,7 @@ test("Retourner uniquement les transactions du mois en cours", () => {
       category: "revenu",
     },
   ];
-  expect(transactionOnlyInCurrentMonth(arrayTransaction)).toEqual([
+  expect(filterTransactionsCurrentMonth(arrayTransaction)).toEqual([
     {
       id: 4,
       date: `05/${currentMonth}/2026`,
@@ -98,27 +98,27 @@ test("Retourner uniquement les transactions du mois en cours", () => {
 });
 
 test("échappe un champ simple", () => {
-  expect(encapsulateSpecialChars("Salaire")).toBe('"Salaire"');
+  expect(escapeCsvValue("Salaire")).toBe('"Salaire"');
 });
 
 test("échappe une virgule", () => {
-  expect(encapsulateSpecialChars("Salaire, prime")).toBe('"Salaire, prime"');
+  expect(escapeCsvValue("Salaire, prime")).toBe('"Salaire, prime"');
 });
 
 test("échappe les guillemets", () => {
-  expect(encapsulateSpecialChars('Prime "exceptionnelle"')).toBe(
+  expect(escapeCsvValue('Prime "exceptionnelle"')).toBe(
     '"Prime ""exceptionnelle"""',
   );
 });
 
 test("échappe les retours ligne", () => {
-  expect(encapsulateSpecialChars("Ligne\nNouvelle")).toBe('"Ligne\nNouvelle"');
+  expect(escapeCsvValue("Ligne\nNouvelle")).toBe('"Ligne\nNouvelle"');
 });
 
-test("emptyArray retourne seulement les headers CSV pour un tableau vide", () => {
-  expect(emptyArray([])).toBe('"date","label","amount","category"');
+test("buildCsvContent retourne seulement les headers CSV pour un tableau vide", () => {
+  expect(buildCsvContent([])).toBe('"date","label","amount","category"');
 });
 
-test("emptyArray retourne seulement les headers CSV si la valeur n'est pas un tableau", () => {
-  expect(emptyArray(null)).toBe('"date","label","amount","category"');
+test("buildCsvContent retourne seulement les headers CSV si la valeur n'est pas un tableau", () => {
+  expect(buildCsvContent(null)).toBe('"date","label","amount","category"');
 });

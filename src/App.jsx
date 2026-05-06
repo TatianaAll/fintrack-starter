@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { computeBalance, formatAmount, simpleInterest } from "./calculator.js";
 import { seedTransactions } from "./seed.js";
-import { downloadCSV } from "./export-csv.js";
+import { downloadCsv } from "./export-csv.js";
 
 export default function App() {
   const [transactions, setTransactions] = useState(seedTransactions);
@@ -50,7 +50,7 @@ export default function App() {
   }
 
   function handleExport() {
-    downloadCSV(transactions, "fintrack-transactions.csv");
+    downloadCsv(transactions, "fintrack-transactions.csv");
   }
 
   return (
