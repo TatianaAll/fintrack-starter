@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import pluginReact from "eslint-plugin-react";
 import { defineConfig } from "eslint/config";
+import sonarjs from "eslint-plugin-sonarjs";
 
 export default defineConfig([
   {
@@ -17,6 +18,16 @@ export default defineConfig([
   {
     files: ["**/*.{config.js,config.mjs,config.cjs}"],
     languageOptions: { globals: globals.node },
+  },
+  {
+    files: ["**/*.js"],
+    plugins: {
+      sonarjs,
+    },
+    rules: {
+      ...sonarjs.configs.recommended.rules,
+      "sonarjs/cognitive-complexity": ["warn", 15],
+    },
   },
   pluginReact.configs.flat.recommended,
 ]);
