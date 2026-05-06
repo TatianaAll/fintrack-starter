@@ -80,7 +80,45 @@ La communication est ainsi facilitée entre les équipes et évite des incompré
 L’accent est mis sur les processus métiers auxquels le logiciel devra apporter des solutions.
 
 ## E2E - installation de Playwright
-`npm init playwright@latest`
+`npm init playwright@latest` pour télécharger la dépendance
+Ajouter et mettre à jour le fichier `playwtight.config.js` avec le bon chemin vers le dossier ainsi que le bon chemin vers le localhost
+```js
+export default defineConfig({
+  testDir: "./tests-e2e",
+  /* Run tests in files in parallel */
+  fullyParallel: true,
+  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  forbidOnly: !!process.env.CI,
+  /* Retry on CI only */
+  retries: process.env.CI ? 2 : 0,
+  /* Opt out of parallel tests on CI. */
+  workers: process.env.CI ? 1 : undefined,
+  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  reporter: "html",
+  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  use: {
+    /* Base URL to use in actions like `await page.goto('')`. */
+    baseURL: "http://localhost:5173",
+
+    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    trace: "on-first-retry",
+  },
+
+  webServer: {
+    command: "npm run dev",
+    url: "http://localhost:5173",
+    reuseExistingServer: true,
+    timeout: 120000,
+  },
+  /// [...] suite du fichier inchangé
+})
+```
+
+Pour lancer les tests playwright il faut lancer la commande `npx playwright test`
+Et pour voir le rapport des test il faut faire : `npx playwright show-report`
+Il est aussi possible de voir directement avec l'interface de notre site avec `npx playwright test --ui`
+
+
 ### Ecriture des tests
 ❌ toBe → comparaison par référence
 ✅ toEqual / toStrictEqual → comparaison par valeur
