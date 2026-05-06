@@ -6,7 +6,7 @@ import {
   buildCsvContent,
 } from "./export-csv.js";
 
-test("Retourner les bons nom de colonnes", () => {
+test("Je donne un tableau de transaction, quand je récupère les en-têtes CSV, alors je dois obtenir les noms de colonnes corrects", () => {
   const arrayTransaction = {
     id: 1,
     date: "xx/xx/xx",
@@ -27,7 +27,7 @@ test("Retourner les bons nom de colonnes", () => {
   ]);
 });
 
-test("Retourner les bonnes informations de la ligne", () => {
+test("Je donne UNE transaction, quand je transforme la ligne en CSV, alors je dois obtenir les valeurs échappées correctement", () => {
   const arrayTransaction = [
     {
       id: 1,
@@ -44,7 +44,7 @@ test("Retourner les bonnes informations de la ligne", () => {
   ]);
 });
 
-test("Retourner uniquement les transactions du mois en cours", () => {
+test("Je donne des transactions de différents mois, quand je filtre par mois courant, alors seules les transactions du mois courant sont retournées", () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const arrayTransaction = [
@@ -116,28 +116,28 @@ test("Retourner uniquement les transactions du mois en cours", () => {
   ]);
 });
 
-test("échappe un champ simple", () => {
+test("Étant donné une valeur simple, quand je l'échappe, alors elle est encadrée par des guillemets", () => {
   expect(escapeCsvValue("Salaire")).toBe('"Salaire"');
 });
 
-test("échappe une virgule", () => {
+test("Étant donné une valeur contenant une virgule, quand je l'échappe, alors la valeur reste valide en CSV", () => {
   expect(escapeCsvValue("Salaire, prime")).toBe('"Salaire, prime"');
 });
 
-test("échappe les guillemets", () => {
+test("Étant donné une valeur contenant des guillemets, quand je l'échappe, alors les guillemets internes sont doublés", () => {
   expect(escapeCsvValue('Prime "exceptionnelle"')).toBe(
     '"Prime ""exceptionnelle"""',
   );
 });
 
-test("échappe les retours ligne", () => {
+test("Étant donné une valeur contenant un saut de ligne, quand je l'échappe, alors le saut de ligne est conservé dans la valeur CSV", () => {
   expect(escapeCsvValue("Ligne\nNouvelle")).toBe('"Ligne\nNouvelle"');
 });
 
-test("buildCsvContent retourne seulement les headers CSV pour un tableau vide", () => {
+test("Étant donné un tableau vide, quand je construis le contenu CSV, alors je ne reçois que la ligne d'en-tête", () => {
   expect(buildCsvContent([])).toBe('"date","label","amount","category"');
 });
 
-test("buildCsvContent retourne seulement les headers CSV si la valeur n'est pas un tableau", () => {
+test("Étant donné une valeur non-tableau, quand je construis le contenu CSV, alors je ne reçois que la ligne d'en-tête", () => {
   expect(buildCsvContent(null)).toBe('"date","label","amount","category"');
 });

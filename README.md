@@ -73,6 +73,12 @@ Pour le test de coverage il faut lancer `npm test -- --coverage` vu qu'on est av
 https://www.ibm.com/fr-fr/think/topics/test-driven-development 
 Le développement piloté par les tests (TDD) est une approche du développement logiciel dans laquelle les tests logiciels sont écrits avant les fonctions correspondantes. 
 
+## BDD – Behavior Driven Development
+Le Behavior-Driven Development, ou BDD, est une méthode de développement logicielle dérivée du Test-Driven Development – TDD. Elle incite à la collaboration des différentes parties prenantes au projet logicielle, équipes de développement, qualification et management en instaurant que le comportement d’une fonctionnalité sera décrit par des phrases basées sur un canevas composé de mots-clés du langage courant.
+La communication est ainsi facilitée entre les équipes et évite des incompréhensions inhérentes à des parties d’environnements différents.
+
+L’accent est mis sur les processus métiers auxquels le logiciel devra apporter des solutions.
+
 ### Ecriture des tests
 ❌ toBe → comparaison par référence
 ✅ toEqual / toStrictEqual → comparaison par valeur
