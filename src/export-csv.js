@@ -86,7 +86,9 @@ export function buildCsvContent(arrayTransaction) {
 }
 
 export function downloadCsv(arrayTransaction, fileName = "transactions.csv") {
-  const csvContent = buildCsvContent(arrayTransaction);
+  const csvContent = buildCsvContent(
+    filterTransactionsCurrentMonth(arrayTransaction),
+  );
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -100,25 +102,3 @@ export function downloadCsv(arrayTransaction, fileName = "transactions.csv") {
 
   return csvContent;
 }
-
-// const arrayTransaction = [
-//   {
-//     id: 1,
-//     date: "05/05/2026",
-//     label: "Salaire",
-//     amount: 2400,
-//     type: "credit",
-//     currency: "EUR",
-//     category: "revenu",
-//   },
-//   {
-//     id: 2,
-//     date: "05/02/2026",
-//     label: "Salaire",
-//     amount: 1900,
-//     type: "impot",
-//     currency: "EUR",
-//     category: "revenu",
-//   },
-// ];
-// console.log(filterTransactionsCurrentMonth(arrayTransaction));

@@ -46,6 +46,7 @@ test("Retourner les bonnes informations de la ligne", () => {
 
 test("Retourner uniquement les transactions du mois en cours", () => {
   const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
   const arrayTransaction = [
     {
       id: 1,
@@ -76,23 +77,41 @@ test("Retourner uniquement les transactions du mois en cours", () => {
     },
     {
       id: 4,
-      date: `05/${currentMonth}/2026`,
+      date: `05/${currentMonth}/${currentYear}`,
       label: "virement",
       amount: 2400,
       type: "credit",
       currency: "EUR",
       category: "revenu",
     },
+    {
+      id: 5,
+      date: `${currentYear}-${String(currentMonth).padStart(2, "0")}-05T08:42:12.321Z`,
+      label: "Coffee shop",
+      amount: 4.2,
+      type: "debit",
+      currency: "EUR",
+      category: "autre",
+    },
   ];
   expect(filterTransactionsCurrentMonth(arrayTransaction)).toEqual([
     {
       id: 4,
-      date: `05/${currentMonth}/2026`,
+      date: `05/${currentMonth}/${currentYear}`,
       label: "virement",
       amount: 2400,
       type: "credit",
       currency: "EUR",
       category: "revenu",
+    },
+    {
+      id: 5,
+      date: `${currentYear}-${String(currentMonth).padStart(2, "0")}-05T08:42:12.321Z`,
+      label: "Coffee shop",
+      amount: 4.2,
+      type: "debit",
+      currency: "EUR",
+      category: "autre",
     },
   ]);
 });
