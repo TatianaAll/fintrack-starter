@@ -77,7 +77,7 @@ export default function App() {
           </article>
           <article className="card">
             <span className="card-label">Débits du mois</span>
-            <span className="card-value card-debit">
+            <span className="card-value card-debit" data-testid="debit">
               - {formatAmount(totalDebit, "EUR")}
             </span>
           </article>
