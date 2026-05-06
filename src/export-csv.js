@@ -2,18 +2,15 @@
 // exemple d'une transaction (depuis seed.js)
 // { id: 1,  date: todayMinus(28), label: 'Salaire', amount: 2400, type: 'credit', currency: 'EUR', category: 'revenu' },
 export function getHeaderCsv(arrayTransaction) {
-  const headersCsv = Object.getOwnPropertyNames(arrayTransaction);
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames
+  const headersCsv = Object.keys(arrayTransaction);
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
   return headersCsv;
 }
 
-const arrayTransaction = {
-  id: 1,
-  date: "xx/xx/xx",
-  label: "Salaire",
-  amount: 2400,
-  type: "credit",
-  currency: "EUR",
-  category: "revenu",
-};
-console.log(getHeaderCsv(arrayTransaction));
+// 2. Une fonction qui prend le même tableau et qui ressort les transaction en une ligne csv
+export function transformTransactionInCsv(arrayTransaction) {
+  return arrayTransaction.map((transaction) => {
+    const { date, label, amount, category } = transaction;
+    return `"${date}","${label}","${amount}","${category}"`;
+  });
+}

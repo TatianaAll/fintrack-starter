@@ -69,4 +69,13 @@ Vu que le projet est en ESM et que Jest est configuré de base pour du Common JS
 
 Pour le test de coverage il faut lancer `npm test -- --coverage` vu qu'on est avec l'écriture ESM
 
+## TDD ou Test Driven Development et tests E2E
+https://www.ibm.com/fr-fr/think/topics/test-driven-development 
+Le développement piloté par les tests (TDD) est une approche du développement logiciel dans laquelle les tests logiciels sont écrits avant les fonctions correspondantes. 
+
+### Ecriture des tests
+❌ toBe → comparaison par référence
+✅ toEqual / toStrictEqual → comparaison par valeur
+Pour les tableaux et objets → jamais toBe
+
 *Projet fil rouge B3 Dev — My Digital School Bordeaux*
