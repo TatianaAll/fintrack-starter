@@ -14,3 +14,34 @@ export function transformTransactionInCsv(arrayTransaction) {
     return `"${date}","${label}","${amount}","${category}"`;
   });
 }
+
+// 3. Les transactions hors du mois en cours sont filtrées.
+export function transactionOnlyInCurrentMonth(arrayTransaction) {
+  const currentMonth = new Date().getMonth() + 1;
+  return arrayTransaction.filter((transaction) => {
+    const transactionMonth = Number(transaction.date.split("/")[1]);
+    return transactionMonth === currentMonth;
+  });
+}
+
+// const arrayTransaction = [
+//   {
+//     id: 1,
+//     date: "05/05/2026",
+//     label: "Salaire",
+//     amount: 2400,
+//     type: "credit",
+//     currency: "EUR",
+//     category: "revenu",
+//   },
+//   {
+//     id: 2,
+//     date: "05/02/2026",
+//     label: "Salaire",
+//     amount: 1900,
+//     type: "impot",
+//     currency: "EUR",
+//     category: "revenu",
+//   },
+// ];
+// console.log(transactionOnlyInCurrentMonth(arrayTransaction));
