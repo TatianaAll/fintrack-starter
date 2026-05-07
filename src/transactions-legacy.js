@@ -21,15 +21,6 @@ function fmt(d) {
   return dd + "/" + mm + "/" + yyyy;
 }
 
-// fonction utilitaire bis (faut-il vraiment deux fonctions de format ?)
-// défini mais jamais utilisée --> a supprimer ?
-// function formatDate2(date) {
-//   let d = date.getDate();
-//   let m = date.getMonth() + 1;
-//   let y = date.getFullYear();
-//   return (d < 10 ? '0' + d : d) + '/' + (m < 10 ? '0' + m : m) + '/' + y;
-// }
-
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
@@ -234,12 +225,4 @@ export function processTransactions(txs, opts) {
     errors: errors,
     warnings: warnings,
   };
-}
-
-// helper utilisé nulle part (dead code ?)
-export function legacyHelper(x) {
-  if (x === null) return null;
-  if (x === undefined) return undefined;
-  if (typeof x === "string") return x.trim();
-  return x;
 }
