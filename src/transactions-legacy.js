@@ -21,6 +21,25 @@ function fmt(d) {
   return dd + "/" + mm + "/" + yyyy;
 }
 
+// fonction de normalisation des données optionnelles passée pour créer les transactions
+export function normalizeOptions(opts) {
+  const normalized = {};
+
+  const now = new Date();
+
+  // si opts absentes ou non valides
+  if (!opts || typeof opts !== "object") {
+    opts = {};
+  }
+
+  normalized.currency = opts.currency || "EUR";
+  normalized.month = opts.month ? opts.month : now.getMonth();
+  normalized.year = opts.year ? opts.year : now.getFullYear();
+  normalized.threshold = opts.threshold === undefined ? 1000 : opts.threshold;
+
+  return normalized;
+}
+
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
@@ -36,30 +55,9 @@ export function processTransactions(txs, opts) {
   let rate;
   let converted;
   let category;
-  let month;
-  let year;
-  let threshold;
 
-  // si pas d'options on met des valeurs par défaut
-  if (!opts) {
-    opts = {};
-  }
-  if (!opts.currency) {
-    opts.currency = "EUR";
-  }
-  if (!opts.month) {
-    opts.month = new Date().getMonth();
-  }
-  if (!opts.year) {
-    opts.year = new Date().getFullYear();
-  }
-  if (opts.threshold === undefined) {
-    opts.threshold = 1000;
-  }
-
-  threshold = opts.threshold;
-  month = opts.month;
-  year = opts.year;
+  // si pas d'options on met des valeurs par défaut via la fonction normalizeOptions
+  const { currency, month, year, threshold } = normalizeOptions(opts);
 
   // boucle principale
   for (i = 0; i < txs.length; i++) {
@@ -101,15 +99,15 @@ export function processTransactions(txs, opts) {
     }
 
     // conversion devise si besoin
-    if (tx.currency && tx.currency !== opts.currency) {
+    if (tx.currency && tx.currency !== currency) {
       // taux en dur, à mettre à jour à la main tous les mois...
-      if (tx.currency === "USD" && opts.currency === "EUR") {
+      if (tx.currency === "USD" && currency === "EUR") {
         rate = 0.92;
-      } else if (tx.currency === "EUR" && opts.currency === "USD") {
+      } else if (tx.currency === "EUR" && currency === "USD") {
         rate = 1.08;
-      } else if (tx.currency === "GBP" && opts.currency === "EUR") {
+      } else if (tx.currency === "GBP" && currency === "EUR") {
         rate = 1.17;
-      } else if (tx.currency === "EUR" && opts.currency === "GBP") {
+      } else if (tx.currency === "EUR" && currency === "GBP") {
         rate = 0.85;
       } else {
         rate = 1; // fallback
@@ -184,8 +182,8 @@ export function processTransactions(txs, opts) {
     item.label = tx.label || "(sans libellé)";
     item.amount = converted;
     item.originalAmount = tx.amount;
-    item.originalCurrency = tx.currency || opts.currency;
-    item.currency = opts.currency;
+    item.originalCurrency = tx.currency || currency;
+    item.currency = currency;
     item.type = tx.type;
     item.category = category;
     item.flagged = converted > threshold && tx.type === "debit";
