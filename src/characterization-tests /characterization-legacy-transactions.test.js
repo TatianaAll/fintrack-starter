@@ -107,4 +107,45 @@ describe("processTransactions", () => {
     const result = processTransactions(txs, baseOpts);
     expect(result.transactions[0].amount).toBe(100); // taux à 1 en fallback
   });
+  // Catégorisation
+  it("catégorise un libellé contenant 'loyer' comme logement", () => {
+    const txs = [
+      {
+        id: 1,
+        date: "2026-05-01",
+        type: "debit",
+        amount: 800,
+        label: "Loyer appartement",
+      },
+    ];
+    const result = processTransactions(txs, baseOpts);
+    expect(result.transactions[0].category).toBe("logement");
+  });
+
+  it("catégorise un libellé contenant 'Netflix' comme loisirs", () => {
+    const txs = [
+      {
+        id: 1,
+        date: "2026-05-01",
+        type: "debit",
+        amount: 15,
+        label: "Abonnement Netflix",
+      },
+    ];
+    const result = processTransactions(txs, baseOpts);
+    expect(result.transactions[0].category).toBe("loisirs");
+  });
+
+  it("catégorise une transaction sans libellé comme 'autre'", () => {
+    const txs = [
+      {
+        id: 1,
+        date: "2026-05-01",
+        type: "debit",
+        amount: 20,
+      },
+    ];
+    const result = processTransactions(txs, baseOpts);
+    expect(result.transactions[0].category).toBe("autre");
+  });
 });
