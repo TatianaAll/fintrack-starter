@@ -44,4 +44,12 @@ describe("processTransactions", () => {
     const result = processTransactions(txs, []);
     expect(result.total).toBe(60);
   });
+  it("utilise les options par défaut quand opts est undefined", () => {
+    const result = processTransactions(txs);
+    expect(result.total).toBe(60);
+  });
+  it("utilise les options par défaut quand opts est null", () => {
+    const result = processTransactions(txs, null);
+    expect(result.total).toBe(60);
+  });
 });
