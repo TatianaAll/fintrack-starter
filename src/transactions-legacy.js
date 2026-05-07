@@ -129,6 +129,30 @@ export function categorizeTransaction(transactionLabel) {
   }
 }
 
+function applyTransactionImpact(transactionType, amount, totals) {
+  if (transactionType === "credit") {
+    return {
+      total: totals.total + amount,
+      totalCredit: totals.totalCredit + amount,
+      totalDebit: totals.totalDebit,
+      nbCredit: totals.nbCredit + 1,
+      nbDebit: totals.nbDebit,
+    };
+  }
+
+  if (transactionType === "debit") {
+    return {
+      total: totals.total - amount,
+      totalCredit: totals.totalCredit,
+      totalDebit: totals.totalDebit + amount,
+      nbCredit: totals.nbCredit,
+      nbDebit: totals.nbDebit + 1,
+    };
+  }
+
+  return totals; // transfer
+}
+
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
@@ -192,18 +216,14 @@ export function processTransactions(txs, opts) {
       );
     }
 
-    // calculs
-    if (tx.type === "credit") {
-      total = total + converted;
-      totalCredit = totalCredit + converted;
-      nbCredit = nbCredit + 1;
-    } else if (tx.type === "debit") {
-      total = total - converted;
-      totalDebit = totalDebit + converted;
-      nbDebit = nbDebit + 1;
-    } else if (tx.type === "transfer") {
-      // les transferts ne changent pas le total
-    }
+    ({ total, totalCredit, totalDebit, nbCredit, nbDebit } =
+      applyTransactionImpact(tx.type, converted, {
+        total,
+        totalCredit,
+        totalDebit,
+        nbCredit,
+        nbDebit,
+      }));
 
     // construction de l'objet de sortie
     let item = {};
