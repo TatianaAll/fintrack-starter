@@ -48,6 +48,23 @@ export function isTypeValid(type) {
   return false;
 }
 
+export function validateAmount(transaction, index, errors) {
+  // on vérifie le montant
+  if (transaction.amount === undefined || transaction.amount === null) {
+    errors.push("transaction " + index + " has no amount");
+    return false;
+  }
+  if (typeof transaction.amount !== "number") {
+    errors.push("transaction " + index + " amount is not a number");
+    return false;
+  }
+  if (transaction.amount < 0) {
+    errors.push("transaction " + index + " has negative amount");
+    return false;
+  }
+  return true;
+}
+
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
@@ -85,17 +102,8 @@ export function processTransactions(txs, opts) {
       continue;
     }
 
-    // on vérifie le montant
-    if (tx.amount === undefined || tx.amount === null) {
-      errors.push("transaction " + i + " has no amount");
-      continue;
-    }
-    if (typeof tx.amount !== "number") {
-      errors.push("transaction " + i + " amount is not a number");
-      continue;
-    }
-    if (tx.amount < 0) {
-      errors.push("transaction " + i + " has negative amount");
+    // on vérifie le montant avec une fonction autre
+    if (!validateAmount(tx, i, errors)) {
       continue;
     }
 
