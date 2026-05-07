@@ -94,6 +94,41 @@ export function convertAmountDependingCurrency(
   }
 }
 
+// fonction de catégorisation de la transaction
+export function categorizeTransaction(transactionLabel) {
+  // catégorisation manuelle (devrait être dans la donnée mais bon...)
+  if (transactionLabel) {
+    let lab = transactionLabel.toLowerCase();
+    if (lab.indexOf("loyer") >= 0 || lab.indexOf("rent") >= 0) {
+      return "logement";
+    } else if (
+      lab.indexOf("course") >= 0 ||
+      lab.indexOf("groce") >= 0 ||
+      lab.indexOf("super") >= 0
+    ) {
+      return "alimentation";
+    } else if (
+      lab.indexOf("essence") >= 0 ||
+      lab.indexOf("gas") >= 0 ||
+      lab.indexOf("uber") >= 0
+    ) {
+      return "transport";
+    } else if (
+      lab.indexOf("netflix") >= 0 ||
+      lab.indexOf("spotify") >= 0 ||
+      lab.indexOf("cinema") >= 0
+    ) {
+      return "loisirs";
+    } else if (lab.indexOf("salaire") >= 0 || lab.indexOf("salary") >= 0) {
+      return "revenu";
+    } else {
+      return "autre";
+    }
+  } else {
+    return "autre";
+  }
+}
+
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
@@ -141,37 +176,8 @@ export function processTransactions(txs, opts) {
       tx.amount,
     );
 
-    // catégorisation manuelle (devrait être dans la donnée mais bon...)
-    if (tx.label) {
-      let lab = tx.label.toLowerCase();
-      if (lab.indexOf("loyer") >= 0 || lab.indexOf("rent") >= 0) {
-        category = "logement";
-      } else if (
-        lab.indexOf("course") >= 0 ||
-        lab.indexOf("groce") >= 0 ||
-        lab.indexOf("super") >= 0
-      ) {
-        category = "alimentation";
-      } else if (
-        lab.indexOf("essence") >= 0 ||
-        lab.indexOf("gas") >= 0 ||
-        lab.indexOf("uber") >= 0
-      ) {
-        category = "transport";
-      } else if (
-        lab.indexOf("netflix") >= 0 ||
-        lab.indexOf("spotify") >= 0 ||
-        lab.indexOf("cinema") >= 0
-      ) {
-        category = "loisirs";
-      } else if (lab.indexOf("salaire") >= 0 || lab.indexOf("salary") >= 0) {
-        category = "revenu";
-      } else {
-        category = "autre";
-      }
-    } else {
-      category = "autre";
-    }
+    // categorisation de la dépense
+    category = categorizeTransaction(tx.label);
 
     // alertes
     if (converted > threshold && tx.type === "debit") {
