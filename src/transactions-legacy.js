@@ -40,6 +40,7 @@ export function normalizeOptions(opts) {
   return normalized;
 }
 
+// fonction de validation du type de transaction
 export function isTypeValid(type) {
   // on vérifie le type
   for (let j = 0; j < TYPES.length; j++) {
@@ -48,6 +49,7 @@ export function isTypeValid(type) {
   return false;
 }
 
+// fonction de validation du montant de la transaction + creation d'erreur
 export function validateAmount(transaction, index, errors) {
   // on vérifie le montant
   if (transaction.amount === undefined || transaction.amount === null) {
@@ -65,6 +67,33 @@ export function validateAmount(transaction, index, errors) {
   return true;
 }
 
+// fonction de modification du montant selon la monnaie utilisée
+export function convertAmountDependingCurrency(
+  transactionCurrency,
+  optionCurrency,
+  transactionAmount,
+) {
+  // conversion devise si besoin
+  if (transactionCurrency && transactionCurrency !== optionCurrency) {
+    // taux en dur, à mettre à jour à la main tous les mois...
+    let rate = 0;
+    if (transactionCurrency === "USD" && optionCurrency === "EUR") {
+      rate = 0.92;
+    } else if (transactionCurrency === "EUR" && optionCurrency === "USD") {
+      rate = 1.08;
+    } else if (transactionCurrency === "GBP" && optionCurrency === "EUR") {
+      rate = 1.17;
+    } else if (transactionCurrency === "EUR" && optionCurrency === "GBP") {
+      rate = 0.85;
+    } else {
+      rate = 1; // fallback
+    }
+    return transactionAmount * rate;
+  } else {
+    return transactionAmount;
+  }
+}
+
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
@@ -76,8 +105,6 @@ export function processTransactions(txs, opts) {
   let errors = [];
   let warnings = [];
   let tx;
-  let rate;
-  let converted;
   let category;
 
   // si pas d'options on met des valeurs par défaut via la fonction normalizeOptions
@@ -107,24 +134,12 @@ export function processTransactions(txs, opts) {
       continue;
     }
 
-    // conversion devise si besoin
-    if (tx.currency && tx.currency !== currency) {
-      // taux en dur, à mettre à jour à la main tous les mois...
-      if (tx.currency === "USD" && currency === "EUR") {
-        rate = 0.92;
-      } else if (tx.currency === "EUR" && currency === "USD") {
-        rate = 1.08;
-      } else if (tx.currency === "GBP" && currency === "EUR") {
-        rate = 1.17;
-      } else if (tx.currency === "EUR" && currency === "GBP") {
-        rate = 0.85;
-      } else {
-        rate = 1; // fallback
-      }
-      converted = tx.amount * rate;
-    } else {
-      converted = tx.amount;
-    }
+    // convertion selon la monnaie
+    let converted = convertAmountDependingCurrency(
+      tx.currency,
+      currency,
+      tx.amount,
+    );
 
     // catégorisation manuelle (devrait être dans la donnée mais bon...)
     if (tx.label) {
