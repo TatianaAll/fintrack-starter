@@ -34,6 +34,7 @@ describe("processTransactions", () => {
       label: "Course",
     },
   ];
+  const baseOpts = { month: 4, year: 2026 }; // mai 2026 (commence à 0 pour janvier)
 
   it("calcule correctement le total pour un crédit et un débit", () => {
     const result = processTransactions(txs, { month: 4, year: 2026 }); // il faut mettre 4 pour mai...
@@ -72,11 +73,38 @@ describe("processTransactions", () => {
     expect(result.errors.length).toBe(1); // pas de montant donc erreur
   });
   it("rejette une transaction avec un montant null", () => {
-    const txs = [
-      { id: 1, date: "2026-05-01", type: "debit", amount: undefined },
-    ];
+    const txs = [{ id: 1, date: "2026-05-01", type: "debit", amount: null }];
     const result = processTransactions(txs, { month: 4, year: 2026 });
     expect(result.transactions.length).toBe(0);
     expect(result.errors.length).toBe(1); // pas de montant donc erreur
+  });
+
+  // conversion monétaire
+  it("convertit USD vers EUR avec un taux fixe", () => {
+    const txs = [
+      {
+        id: 1,
+        date: "2026-05-01",
+        type: "credit",
+        amount: 100,
+        currency: "USD",
+      },
+    ];
+    const result = processTransactions(txs, baseOpts);
+    expect(result.transactions[0].amount).toBe(92); // taux en dur dans le code
+  });
+
+  it("utilise un taux de conversion égal à 1 pour une devise inconnue", () => {
+    const txs = [
+      {
+        id: 1,
+        date: "2026-05-01",
+        type: "credit",
+        amount: 100,
+        currency: "JPY",
+      },
+    ];
+    const result = processTransactions(txs, baseOpts);
+    expect(result.transactions[0].amount).toBe(100); // taux à 1 en fallback
   });
 });
