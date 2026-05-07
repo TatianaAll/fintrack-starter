@@ -52,4 +52,8 @@ describe("processTransactions", () => {
     const result = processTransactions(txs, null);
     expect(result.total).toBe(60);
   });
+  it("ignore opts.month = 0 et utilise le mois courant", () => {
+    const result = processTransactions(txs, { month: 0, year: 2026 });
+    expect(result.total).toBe(60);
+  });
 });
