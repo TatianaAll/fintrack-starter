@@ -40,6 +40,14 @@ export function normalizeOptions(opts) {
   return normalized;
 }
 
+export function isTypeValid(type) {
+  // on vérifie le type
+  for (let j = 0; j < TYPES.length; j++) {
+    if (TYPES[j] === type) return true;
+  }
+  return false;
+}
+
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
@@ -50,7 +58,6 @@ export function processTransactions(txs, opts) {
   let nbDebit = 0;
   let errors = [];
   let warnings = [];
-  let i, j; // avant il y avait k qui n'était pas utilisées donc supprimée
   let tx;
   let rate;
   let converted;
@@ -60,7 +67,7 @@ export function processTransactions(txs, opts) {
   const { currency, month, year, threshold } = normalizeOptions(opts);
 
   // boucle principale
-  for (i = 0; i < txs.length; i++) {
+  for (let i = 0; i < txs.length; i++) {
     tx = txs[i];
 
     // on filtre par mois et par année
@@ -72,14 +79,8 @@ export function processTransactions(txs, opts) {
       continue;
     }
 
-    // on vérifie le type
-    let typeOk = false;
-    for (j = 0; j < TYPES.length; j++) {
-      if (TYPES[j] === tx.type) {
-        typeOk = true;
-      }
-    }
-    if (!typeOk) {
+    const isTypeOk = isTypeValid(tx.type);
+    if (!isTypeOk) {
       errors.push("transaction " + i + " has invalid type");
       continue;
     }
