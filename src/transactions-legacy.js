@@ -131,36 +131,26 @@ export function categorizeTransaction(transactionLabel) {
 
 function applyTransactionImpact(transactionType, amount, totals) {
   if (transactionType === "credit") {
-    return {
-      total: totals.total + amount,
-      totalCredit: totals.totalCredit + amount,
-      totalDebit: totals.totalDebit,
-      nbCredit: totals.nbCredit + 1,
-      nbDebit: totals.nbDebit,
-    };
+    totals.total += amount;
+    totals.totalCredit += amount;
+    totals.nbCredit += 1;
+  } else if (transactionType === "debit") {
+    totals.total -= amount;
+    totals.totalDebit += amount;
+    totals.nbDebit += 1;
   }
-
-  if (transactionType === "debit") {
-    return {
-      total: totals.total - amount,
-      totalCredit: totals.totalCredit,
-      totalDebit: totals.totalDebit + amount,
-      nbCredit: totals.nbCredit,
-      nbDebit: totals.nbDebit + 1,
-    };
-  }
-
-  return totals; // transfer
 }
 
 // THE function
 export function processTransactions(txs, opts) {
   let result = [];
-  let total = 0;
-  let totalCredit = 0;
-  let totalDebit = 0;
-  let nbCredit = 0;
-  let nbDebit = 0;
+  let totals = {
+    total: 0,
+    totalCredit: 0,
+    totalDebit: 0,
+    nbCredit: 0,
+    nbDebit: 0,
+  };
   let errors = [];
   let warnings = [];
   let tx;
@@ -216,14 +206,7 @@ export function processTransactions(txs, opts) {
       );
     }
 
-    ({ total, totalCredit, totalDebit, nbCredit, nbDebit } =
-      applyTransactionImpact(tx.type, converted, {
-        total,
-        totalCredit,
-        totalDebit,
-        nbCredit,
-        nbDebit,
-      }));
+    applyTransactionImpact(tx.type, converted, totals);
 
     // construction de l'objet de sortie
     let item = {};
@@ -253,21 +236,21 @@ export function processTransactions(txs, opts) {
 
   // moyenne (au cas ou)
   let avgCredit = 0;
-  if (nbCredit > 0) {
-    avgCredit = totalCredit / nbCredit;
+  if (totals.nbCredit > 0) {
+    avgCredit = totals.totalCredit / totals.nbCredit;
   }
   let avgDebit = 0;
-  if (nbDebit > 0) {
-    avgDebit = totalDebit / nbDebit;
+  if (totals.nbDebit > 0) {
+    avgDebit = totals.totalDebit / totals.nbDebit;
   }
 
   return {
     transactions: result,
-    total: total,
-    totalCredit: totalCredit,
-    totalDebit: totalDebit,
-    nbCredit: nbCredit,
-    nbDebit: nbDebit,
+    total: totals.total,
+    totalCredit: totals.totalCredit,
+    totalDebit: totals.totalDebit,
+    nbCredit: totals.nbCredit,
+    nbDebit: totals.nbDebit,
     avgCredit: avgCredit,
     avgDebit: avgDebit,
     errors: errors,
