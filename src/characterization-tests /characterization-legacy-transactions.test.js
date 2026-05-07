@@ -107,6 +107,7 @@ describe("processTransactions", () => {
     const result = processTransactions(txs, baseOpts);
     expect(result.transactions[0].amount).toBe(100); // taux à 1 en fallback
   });
+
   // Catégorisation
   it("catégorise un libellé contenant 'loyer' comme logement", () => {
     const txs = [
@@ -147,5 +148,42 @@ describe("processTransactions", () => {
     ];
     const result = processTransactions(txs, baseOpts);
     expect(result.transactions[0].category).toBe("autre");
+  });
+
+  // gestion des alertes
+  it("génère un warning pour un débit supérieur au threshold", () => {
+    const txs = [
+      {
+        id: 1,
+        date: "2026-05-01",
+        type: "debit",
+        amount: 1500,
+        label: "Achat important",
+      },
+    ];
+    const result = processTransactions(txs, {
+      ...baseOpts,
+      threshold: 1000,
+    });
+    expect(result.warnings).toHaveLength(1);
+    expect(result.transactions[0].flagged).toBe(true);
+  });
+
+  it("ne génère pas de warning pour un crédit supérieur au threshold", () => {
+    const txs = [
+      {
+        id: 1,
+        date: "2026-05-01",
+        type: "credit",
+        amount: 2000,
+        label: "Prime",
+      },
+    ];
+    const result = processTransactions(txs, {
+      ...baseOpts,
+      threshold: 1000,
+    });
+    expect(result.warnings).toHaveLength(0);
+    expect(result.transactions[0].flagged).toBe(false);
   });
 });
