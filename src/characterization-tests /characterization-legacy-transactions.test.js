@@ -14,6 +14,7 @@ Michael Feathers suggests the following algorithm to write characterization test
 Les tests de caractérisation servent à figer le comportement existant d’un code legacy afin de pouvoir le refactorer en toute sécurité, sans modifier son comportement observable.
 */
 
+// Tests de caractérisation sur le format des opts qui est un paramètre attendu à l'appel de la fonction
 describe("processTransactions", () => {
   const txs = [
     {
@@ -55,5 +56,13 @@ describe("processTransactions", () => {
   it("ignore opts.month = 0 et utilise le mois courant", () => {
     const result = processTransactions(txs, { month: 0, year: 2026 });
     expect(result.total).toBe(60);
+  });
+
+  // Test de caractérisation sur le traitement d'une transactions
+  it("rejette une transaction avec un type invalide", () => {
+    const txs = [{ id: 1, date: "2026-05-01", type: "foo", amount: 100 }];
+    const result = processTransactions(txs, { month: 4, year: 2026 });
+    expect(result.transactions.length).toBe(0);
+    expect(result.errors.length).toBe(1); // type invalide donc erreur
   });
 });
