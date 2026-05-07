@@ -9,13 +9,13 @@
 
 // ============================================================================
 
-var TYPES = ["credit", "debit", "transfer"];
+const TYPES = ["credit", "debit", "transfer"];
 
 // fonction utilitaire (utilisée nulle part ailleurs ?)
 function fmt(d) {
-  var dd = d.getDate();
-  var mm = d.getMonth() + 1;
-  var yyyy = d.getFullYear();
+  let dd = d.getDate();
+  let mm = d.getMonth() + 1;
+  let yyyy = d.getFullYear();
   if (dd < 10) dd = "0" + dd;
   if (mm < 10) mm = "0" + mm;
   return dd + "/" + mm + "/" + yyyy;
@@ -24,30 +24,30 @@ function fmt(d) {
 // fonction utilitaire bis (faut-il vraiment deux fonctions de format ?)
 // défini mais jamais utilisée --> a supprimer ?
 // function formatDate2(date) {
-//   var d = date.getDate();
-//   var m = date.getMonth() + 1;
-//   var y = date.getFullYear();
+//   let d = date.getDate();
+//   let m = date.getMonth() + 1;
+//   let y = date.getFullYear();
 //   return (d < 10 ? '0' + d : d) + '/' + (m < 10 ? '0' + m : m) + '/' + y;
 // }
 
 // THE function
 export function processTransactions(txs, opts) {
-  var result = [];
-  var total = 0;
-  var totalCredit = 0;
-  var totalDebit = 0;
-  var nbCredit = 0;
-  var nbDebit = 0;
-  var errors = [];
-  var warnings = [];
-  var i, j; // avant il y avait k qui n'était pas utilisées donc supprimée
-  var tx;
-  var rate;
-  var converted;
-  var category;
-  var month;
-  var year;
-  var threshold;
+  let result = [];
+  let total = 0;
+  let totalCredit = 0;
+  let totalDebit = 0;
+  let nbCredit = 0;
+  let nbDebit = 0;
+  let errors = [];
+  let warnings = [];
+  let i, j; // avant il y avait k qui n'était pas utilisées donc supprimée
+  let tx;
+  let rate;
+  let converted;
+  let category;
+  let month;
+  let year;
+  let threshold;
 
   // si pas d'options on met des valeurs par défaut
   if (!opts) {
@@ -75,7 +75,7 @@ export function processTransactions(txs, opts) {
     tx = txs[i];
 
     // on filtre par mois et par année
-    var d = new Date(tx.date);
+    let d = new Date(tx.date);
     if (d.getMonth() !== month) {
       continue;
     }
@@ -84,7 +84,7 @@ export function processTransactions(txs, opts) {
     }
 
     // on vérifie le type
-    var typeOk = false;
+    let typeOk = false;
     for (j = 0; j < TYPES.length; j++) {
       if (TYPES[j] === tx.type) {
         typeOk = true;
@@ -130,7 +130,7 @@ export function processTransactions(txs, opts) {
 
     // catégorisation manuelle (devrait être dans la donnée mais bon...)
     if (tx.label) {
-      var lab = tx.label.toLowerCase();
+      let lab = tx.label.toLowerCase();
       if (lab.indexOf("loyer") >= 0 || lab.indexOf("rent") >= 0) {
         category = "logement";
       } else if (
@@ -187,7 +187,7 @@ export function processTransactions(txs, opts) {
     }
 
     // construction de l'objet de sortie
-    var item = {};
+    let item = {};
     item.id = tx.id;
     item.date = fmt(d);
     item.label = tx.label || "(sans libellé)";
@@ -203,21 +203,21 @@ export function processTransactions(txs, opts) {
 
   // tri par date (un peu pourri mais ça marche)
   result.sort(function (a, b) {
-    var pa = a.date.split("/");
-    var pb = b.date.split("/");
-    var da = new Date(pa[2], pa[1] - 1, pa[0]);
-    var db = new Date(pb[2], pb[1] - 1, pb[0]);
+    let pa = a.date.split("/");
+    let pb = b.date.split("/");
+    let da = new Date(pa[2], pa[1] - 1, pa[0]);
+    let db = new Date(pb[2], pb[1] - 1, pb[0]);
     if (da < db) return -1;
     if (da > db) return 1;
     return 0;
   });
 
   // moyenne (au cas ou)
-  var avgCredit = 0;
+  let avgCredit = 0;
   if (nbCredit > 0) {
     avgCredit = totalCredit / nbCredit;
   }
-  var avgDebit = 0;
+  let avgDebit = 0;
   if (nbDebit > 0) {
     avgDebit = totalDebit / nbDebit;
   }
