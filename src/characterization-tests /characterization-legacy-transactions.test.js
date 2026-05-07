@@ -65,4 +65,18 @@ describe("processTransactions", () => {
     expect(result.transactions.length).toBe(0);
     expect(result.errors.length).toBe(1); // type invalide donc erreur
   });
+  it("rejette une transaction avec un montant undefined", () => {
+    const txs = [{ id: 1, date: "2026-05-01", type: "debit" }];
+    const result = processTransactions(txs, { month: 4, year: 2026 });
+    expect(result.transactions.length).toBe(0);
+    expect(result.errors.length).toBe(1); // pas de montant donc erreur
+  });
+  it("rejette une transaction avec un montant null", () => {
+    const txs = [
+      { id: 1, date: "2026-05-01", type: "debit", amount: undefined },
+    ];
+    const result = processTransactions(txs, { month: 4, year: 2026 });
+    expect(result.transactions.length).toBe(0);
+    expect(result.errors.length).toBe(1); // pas de montant donc erreur
+  });
 });
