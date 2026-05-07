@@ -11,33 +11,37 @@ Michael Feathers suggests the following algorithm to write characterization test
   4. Change the test so that it expects the behavior that the code produces.
   5. Repeat.
 
+Les tests de caractérisation servent à figer le comportement existant d’un code legacy afin de pouvoir le refactorer en toute sécurité, sans modifier son comportement observable.
 */
 
 describe("processTransactions", () => {
-  it("calcule correctement le total pour un crédit et un débit", () => {
-    const txs = [
-      {
-        id: 1,
-        date: "2026-05-01",
-        type: "credit",
-        amount: 100,
-        currency: "EUR",
-        label: "Salaire",
-      },
-      {
-        id: 2,
-        date: "2026-05-07",
-        type: "debit",
-        amount: 40,
-        currency: "EUR",
-        label: "Course",
-      },
-    ];
-    // opts est un objet normalement, si je le met en tableau ?
-    const result = processTransactions(txs, [5, 2025]);
+  const txs = [
+    {
+      id: 1,
+      date: "2026-05-01",
+      type: "credit",
+      amount: 100,
+      currency: "EUR",
+      label: "Salaire",
+    },
+    {
+      id: 2,
+      date: "2026-05-07",
+      type: "debit",
+      amount: 40,
+      currency: "EUR",
+      label: "Course",
+    },
+  ];
 
+  it("calcule correctement le total pour un crédit et un débit", () => {
+    const result = processTransactions(txs, { month: 4, year: 2026 }); // il faut mettre 4 pour mai...
     expect(result.total).toBe(60);
     expect(result.nbCredit).toBe(1);
     expect(result.nbDebit).toBe(1);
   }); // Test passe même si opts est un tableau car le remplace par les opts de base
+  it("utilise les options par défaut quand opts n'est pas un objet", () => {
+    const result = processTransactions(txs, []);
+    expect(result.total).toBe(60);
+  });
 });
